@@ -45,9 +45,9 @@ CREATE TABLE CLIENTES(
 	status ENUM ('ativo','inativo')
 );
 
-/*Verifica total de clientes ativos, mesmo que não esteja vinculado a um sistema
+/*Verifica total de clientes ativos, mesmo que não esteja vinculado a um sistema.
 
-select *, count(nome) as 'Total de Clientes' from clientes
+select *, count(nome) as 'Total de Clientes' from clientes where status like 'ativo%'
 */
 
 CREATE TABLE Programador (
