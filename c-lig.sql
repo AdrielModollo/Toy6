@@ -1,31 +1,28 @@
+----------------------OUTRA FORMA DE FAZER, PORÉM MENOS ORGANZIADA--------------------------------
+
 CREATE DATABASE CLIG;
 
 USE CLIG;
 
+
 CREATE TABLE SISTEMA (
-	codigo INT AUTO_INCREMENT PRIMARY KEY,
-	idProjeto INT NOT NULL,
+	codigo INT AUTO_INCREMENT PRIMARY KEY, 
+	nome VARCHAR(255),
+	descricao TEXT,
+	idProjeto INT,
 	idProgramador INT NOT NULL,
 	cliente_Codigo INT NOT NULL,
-	FOREIGN KEY (idProjeto) REFERENCES PROJETOS (codigo),
+	FOREIGN KEY (idProjeto) REFERENCES SISTEMA (codigo),
     FOREIGN KEY (idProgramador) REFERENCES Programador (codigo),
-	FOREIGN KEY (cliente_Codigo) REFERENCES Clientes (codigo),
+	FOREIGN KEY (cliente_Codigo) REFERENCES Clientes (codigo)
 );
 
-/*Consulta por nomes para verificação
+/*Verifica total de clientes ativos que possua um sistema:
 
-SELECT s.codigo, pj.nome, p.nome, c.nome,  count(c.nome) as 'Registros Ativos' FROM sistema s
-inner join projetos pj on pj.codigo = s.idProjeto
-inner join programador p on p.codigo = s.idProgramador
-inner join clientes c on c.codigo = s.cliente_Codigo
+select *, count(s.nome) as 'Total de Registros' from sistema s
+inner JOIN clientes c on c.Codigo = s.cliente_Codigo
 where status like 'ativo%'; 
 */
-
-CREATE TABLE PROJETOS (
-	codigo INT AUTO_INCREMENT PRIMARY KEY, 
-	nome VARCHAR(255) NOT NULL,
-	descricao TEXT NOT NULL	
-);
 
 CREATE TABLE TAREFAS(
 	Codigo INT AUTO_INCREMENT PRIMARY KEY, 
@@ -40,7 +37,7 @@ CREATE TABLE TAREFAS(
     idProjeto INT,
     idCliente INT,
     idLinguagem INT,
-	FOREIGN KEY (idProjeto) REFERENCES PROJETOS (codigo),
+	FOREIGN KEY (idProjeto) REFERENCES Sistema (codigo),
     FOREIGN KEY (idCliente) REFERENCES CLIENTES (codigo),
     FOREIGN KEY (idLinguagem) REFERENCES Linguagens (codigo)	
 );
@@ -50,12 +47,12 @@ CREATE TABLE CLIENTES(
 	Codigo INT AUTO_INCREMENT PRIMARY KEY,
 	Nome VARCHAR(255) NOT NULL,
 	Servidor VARCHAR(255) NOT NULL,
-	status ENUM ('ativo','inativo') NOT NULL,
+	status ENUM ('ativo','inativo') NOT NULL
 );
 
 /*Verifica total de clientes ativos, mesmo que não esteja vinculado a um sistema.
 
-select *, count(nome) as 'Clientes Ativos' from clientes where status like 'ativo%'
+select *, count(nome) as 'Total de Clientes' from clientes where status like 'ativo%'
 */
 
 CREATE TABLE Programador (
@@ -71,13 +68,11 @@ CREATE TABLE Linguagens (
 
 /* Este select é foi feito para exibir o nome de cada cliente, sistema ou linguagem ao invés de mostrar o código. 
 
-
 SELECT t.Codigo, t.Nome, t.Comando, t.Periodicidade, t.Horario, t.QuantidadeMinutosEsperadoExecucao, t.StatusTarefa, 
-t.StatusSistema, t.DataCadastro, c.nome as 'Cliente', l.nome as 'linguagem', pj.nome as 'Sistema'
+t.StatusSistema, t.DataCadastro, c.nome as 'Cliente', l.nome as 'linguagem', s.nome as 'Sistema'
 FROM tarefas t
 INNER JOIN clientes c on  c.codigo = t.idCliente
-INNER JOIN projetos pj on pj.codigo = t.IdProjeto
+INNER JOIN sistema s on s.codigo = t.IdSistema
 INNER JOIN linguagens l on l.codigo = t.idLinguagem
-
 */
 
